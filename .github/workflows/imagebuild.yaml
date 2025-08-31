@@ -28,23 +28,18 @@ jobs:
         id: finding-files
         run: |
              echo "::set-output name=DOCKERFILES::$(find . -name 'Dockerfile' -print)"
-              IFS="," read -a filearray <<< ${{ steps.finding-files.outputs.DOCKERFILES }}
-              for i in "${filearray[@]}"; do
-                 echo "Found Dockerfile-- $i"
+          
 
-      # - name: Build and Push to ACR
-      #   run: |
-      #     IFS="," read -a myarray <<< ${{ steps.finding-files.outputs.DOCKERFILES }}
-      #     for i in "${myarray[@]}"; do
-      #       echo "Found Dockerfile: $i"
-      #       #editing the name to remove ./
-      #       tagcaps=${i#"./"}
-      #       #converting to lowercase
-      #       tag=${tagcaps,,}
-      #       az acr build --registry "rz8166" --image "$tag:${{ github.sha }}" .
-      #       echo "Successfully built and pushed image with tag: $tag:${{ github.sha }}"
-      #     done
-             
+      - name: Build and Push to ACR
+        run: |
+          IFS="," read -a myarray <<< ${{ steps.finding-files.outputs.DOCKERFILES }}
+          echo "Found Dockerfiles:"
+          for i in "${myarray[@]}"; do
+            echo " - $i"
+          done
+         
+         
+
 
       # - name: Build and Push Docker Image
       #   run: |
@@ -65,5 +60,31 @@ jobs:
       #         tag=${tagcaps,,}
       #         # Build the Docker image using the Dockerfile directory as context
       #         az acr build --registry "rz8166" --image "$tag:${{ github.sha }}" "$build_context"
+     
+     
+     
+     
+     
+          #      for i in "${myarray[@]}"; do
+          #   echo "Found Dockerfile: $i"
+          #   #editing the name to remove ./
+          #   tagcaps=${i#"./"}
+          #   #converting to lowercase
+          #   tag=${tagcaps,,}
+          #   az acr build --registry "rz8166" --image "$tag:${{ github.sha }}" .
+          #   echo "Successfully built and pushed image with tag: $tag:${{ github.sha }}"
+          # done
+             
+     
+     
+     
+     
+     
+     
+     
+     
+     
       #         echo "Successfully built and pushed image with tag: $tag:${{ github.sha }}"
-      #       done
+      #   done
+
+      
