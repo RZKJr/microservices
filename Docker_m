@@ -1,7 +1,6 @@
 FROM library/ubuntu
 RUN apt-get update && \
-    apt-get -qy install wget unzip
-               
+    apt-get -qy install wget unzip xz-utils
 
 WORKDIR /root/
 RUN wget \
