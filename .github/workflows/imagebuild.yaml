@@ -6,11 +6,38 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: login to ACR
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: Azure Container Registry Login
+        run: az acr login --name rz8166
+     
+      - name: Build and Push Docker Image
+        run: |
+
+          # Directory containing Dockerfiles (change as needed)
+            DIR="./"
+
+            # Loop through all Dockerfiles in the directory and subdirectories
+            find "$DIR" -type f -name 'Dockerfile' | while read dockerfile; do
+              # Get the directory of the Dockerfile
+              build_context=$(dirname "$dockerfile")
+              
+              # Create a tag based on the directory name (customize as needed)
+              image_tag=$(basename "$build_context")
+
+              echo "Building image $image_tag from $dockerfile ..."
+              
+              # Build the Docker image using the Dockerfile directory as context
+              docker build -t "$image_tag:latest:${{ github.sha }}" -f "$dockerfile" "$build_context"
+              docker push "$image_tag:latest:${{ github.sha }}"
+            done
