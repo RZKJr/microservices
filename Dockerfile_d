@@ -5,8 +5,9 @@ RUN apt-get update && \
 
 WORKDIR /root/
 RUN wget \
-  https://nodejs.org/dist/v4.2.4/node-v4.2.4-linux-armv7l.tar.gz
-RUN tar -xvf node-v4.2.4-linux-armv7l.tar.gz -C /usr/local \
+  https://nodejs.org/dist/v20.19.2/node-v20.19.2-linux-x64.tar.xz
+
+RUN tar -xvf node-v20.19.2-linux-x64.tar.xz -C /usr/local \
   --strip-components=1
 RUN npm install -g express
 ENV NODE_PATH=/usr/local/lib/node_modules/
