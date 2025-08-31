@@ -1,6 +1,8 @@
 name: Build Docker Image
 
 on:
+  workflow_dispatch:
+    # Manually trigger the workflow
   push:
     branches:
       - feature-branch
@@ -19,7 +21,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       
       - name: Azure Container Registry Login
-        run: az acr login --name rz8166-fpdqhqg2c9ehdhhx
+        run: az acr login --name "rz8166-fpdqhqg2c9ehdhhx"
      
       - name: Build and Push Docker Image
         run: |
