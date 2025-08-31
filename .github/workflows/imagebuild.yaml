@@ -36,7 +36,19 @@ jobs:
           echo "Found Dockerfiles:"
           for i in "${myarray[@]}"; do
             echo " - $i"
+
           done
+     
+          for i in "${myarray[@]}"; do
+            echo "Found Dockerfile: $i"
+            #editing the name to remove ./
+            tagcaps=${i#"./"}
+            #converting to lowercase
+            tag=${tagcaps,,}
+            az acr build --registry "rz8166" --image "$tag:${{ github.sha }}" .
+            echo "Successfully built and pushed image with tag: $tag:${{ github.sha }}"
+          done
+          
          
          
 
@@ -59,31 +71,7 @@ jobs:
       #         tagcaps=${dockerfile#"./"}
       #         tag=${tagcaps,,}
       #         # Build the Docker image using the Dockerfile directory as context
-      #         az acr build --registry "rz8166" --image "$tag:${{ github.sha }}" "$build_context"
-     
-     
-     
-     
-     
-          #      for i in "${myarray[@]}"; do
-          #   echo "Found Dockerfile: $i"
-          #   #editing the name to remove ./
-          #   tagcaps=${i#"./"}
-          #   #converting to lowercase
-          #   tag=${tagcaps,,}
-          #   az acr build --registry "rz8166" --image "$tag:${{ github.sha }}" .
-          #   echo "Successfully built and pushed image with tag: $tag:${{ github.sha }}"
-          # done
-             
-     
-     
-     
-     
-     
-     
-     
-     
-     
+      #         az acr build --registry "rz8166" --image "$tag:${{ github.sha }}" "$build_context"  
       #         echo "Successfully built and pushed image with tag: $tag:${{ github.sha }}"
       #   done
 
