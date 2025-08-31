@@ -33,13 +33,13 @@ jobs:
             find "$DIR" -type f -name 'Dockerfile' | while read dockerfile; do
               # Get the directory of the Dockerfile
               build_context=$(dirname "$dockerfile")
-              
+              echo "Build context-- $build_context"
               # Create a tag based on the directory name (customize as needed)
-              image_tag=$(basename "$build_context")
-
-              echo "Building image $image_tag from $dockerfile ..."
+              #image_tag=$(basename "$build_context")
+              #echo "Image tag-- $image_tag"
+              echo "Building image $dockerfile from $dockerfile ..."
               
               # Build the Docker image using the Dockerfile directory as context
-              docker build -t "$image_tag:${{ github.sha }}" -f "$dockerfile" "$build_context"
-              docker push "$image_tag:${{ github.sha }}"
+              docker build -f "$dockerfile" -t "$dockerfile:${{ github.sha }}" "$build_context"
+              docker push "$dockerfile:${{ github.sha }}"
             done
