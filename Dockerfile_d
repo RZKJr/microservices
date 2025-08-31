@@ -1,4 +1,4 @@
-FROM armhf/ubuntu
+FROM library/ubuntu
 RUN apt-get update && \
     apt-get -qy install wget unzip
                
