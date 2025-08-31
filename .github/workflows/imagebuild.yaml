@@ -40,6 +40,6 @@ jobs:
               echo "Building image $image_tag from $dockerfile ..."
               
               # Build the Docker image using the Dockerfile directory as context
-              docker build -t "$image_tag:latest:${{ github.sha }}" -f "$dockerfile" "$build_context"
-              docker push "$image_tag:latest:${{ github.sha }}"
+              docker build -t "$image_tag:${{ github.sha }}" -f "$dockerfile" "$build_context"
+              docker push "$image_tag:${{ github.sha }}"
             done
