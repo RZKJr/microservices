@@ -38,7 +38,7 @@ jobs:
               #image_tag=$(basename "$build_context")
               #echo "Image tag-- $image_tag"
               echo "Building image $dockerfile from $dockerfile ..."
-              tag=${dockerfile#"./"}
+              tag=${dockerfile#"./",,}
               # Build the Docker image using the Dockerfile directory as context
               docker build -f "$dockerfile" -t "$tag:${{ github.sha }}" "$build_context"
               docker push "$tag:${{ github.sha }}"
