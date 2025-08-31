@@ -3,7 +3,7 @@ name: Build Docker Image
 on:
   push:
     branches:
-      - main
+      - feature-branch
 
 jobs:
   build-and-push:
@@ -19,7 +19,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       
       - name: Azure Container Registry Login
-        run: az acr login --name rz8166
+        run: az acr login --name rz8166-fpdqhqg2c9ehdhhx
      
       - name: Build and Push Docker Image
         run: |
