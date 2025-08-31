@@ -23,24 +23,43 @@ jobs:
       - name: Azure Container Registry Login
         run: az acr login --name "rz8166"
      
-      - name: Build and Push Docker Image
+
+      - name: Finding files and store to output
+        id: finding-files
         run: |
+             echo "::set-output name=DOCKERFILES::$(find . -name 'Dockerfile' -print)"
+          
 
-          # Directory containing Dockerfiles (change as needed)
-            DIR="./"
+      - name: Build and Push to ACR
+        run: |
+          IFS="," read -a myarray <<< ${{ steps.finding-files.outputs.DOCKERFILES }}
+          for i in "${myarray[@]}"; do
+            echo "Found Dockerfile: $i"
+            tag=${i#"./"}
+            tag=${tag,,}
+            az acr build --registry "rz8166" --image "$tag:${{ github.sha }}" "$build_context"
+            echo "Successfully built and pushed image with tag: $tag:${{ github.sha }}"
+          done
+             
 
-            # Loop through all Dockerfiles in the directory and subdirectories
-            find "$DIR" -type f -name 'Dockerfile' | while read dockerfile; do
-              # Get the directory of the Dockerfile
-              build_context=$(dirname "$dockerfile")
-              echo "Build context-- $build_context"
-              # Create a tag based on the directory name (customize as needed)
-              #image_tag=$(basename "$build_context")
-              #echo "Image tag-- $image_tag"
-              echo "Building image $dockerfile from $dockerfile ..."
-              tagcaps=${dockerfile#"./"}
-              tag=${tagcaps,,}
-              # Build the Docker image using the Dockerfile directory as context
-              az acr build --registry "rz8166" --image "$tag:${{ github.sha }}" "$build_context"
-              echo "Successfully built and pushed image with tag: $tag:${{ github.sha }}"
-            done
+      # - name: Build and Push Docker Image
+      #   run: |
+
+      #     # Directory containing Dockerfiles (change as needed)
+      #       DIR="./"
+
+      #       # Loop through all Dockerfiles in the directory and subdirectories
+      #       find "$DIR" -type f -name 'Dockerfile' | while read dockerfile; do
+      #         # Get the directory of the Dockerfile
+      #         build_context=$(dirname "$dockerfile")
+      #         echo "Build context-- $build_context"
+      #         # Create a tag based on the directory name (customize as needed)
+      #         #image_tag=$(basename "$build_context")
+      #         #echo "Image tag-- $image_tag"
+      #         echo "Building image $dockerfile from $dockerfile ..."
+      #         tagcaps=${dockerfile#"./"}
+      #         tag=${tagcaps,,}
+      #         # Build the Docker image using the Dockerfile directory as context
+      #         az acr build --registry "rz8166" --image "$tag:${{ github.sha }}" "$build_context"
+      #         echo "Successfully built and pushed image with tag: $tag:${{ github.sha }}"
+      #       done
