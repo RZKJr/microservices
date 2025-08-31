@@ -41,6 +41,6 @@ jobs:
               tagcaps=${dockerfile#"./"}
               tag=${tagcaps,,}
               # Build the Docker image using the Dockerfile directory as context
-              docker build -f "$dockerfile" -t "$tag:${{ github.sha }}" "$build_context"
-              docker push "$tag:${{ github.sha }}"
+              az acr build --registry "rz8166" --image "$tag:${{ github.sha }}" "$build_context"
+              echo "Successfully built and pushed image with tag: $tag:${{ github.sha }}"
             done
